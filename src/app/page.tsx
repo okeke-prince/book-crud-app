@@ -14,7 +14,11 @@ export default function Home() {
   const [books, setBooks] = useState<Book[]>([
     { title: "The Time Thief", author: "James Hunter", year: 2021, genre: "Science Fiction" },
     { title: "Silent Shadows", author: "Anna Williams", year: 2020, genre: "Thriller" },
-    { title: "Digital Eden", author: "Michael Chan", year: 2019, genre: "Cyberpunk" }
+    { title: "Digital Eden", author: "Michael Chan", year: 2019, genre: "Cyberpunk" },
+    { title: "Echoes of Orion", author: "Daniel Rivera", year: 2023, genre: "Science Fiction" },
+    { title: "Glass Hearts", author: "Emma Thompson", year: 2018, genre: "Romance" },
+    { title: "Clockwork Faith", author: "Oliver Brown", year: 2021, genre: "Steampunk" },
+    { title: "Daughters of Dust", author: "Ava Patel", year: 2020, genre: "Fantasy" }
   ]);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -22,14 +26,14 @@ export default function Home() {
   const [genre, setGenre] = useState('');
   const isShown = true
 
-  function onDelete( title: string){
-      setBooks((val) =>{
-        return val.filter(book => book.title !== title)
-      })
-      
+  function onDelete(title: string) {
+    setBooks((val) => {
+      return val.filter(book => book.title !== title)
+    })
+
   }
 
-  function onAddBook(e: React.FormEvent){
+  function onAddBook(e: React.FormEvent) {
     e.preventDefault();
     if (!title || !author || !year || !genre) return;
     const newBook: Book = {
@@ -44,7 +48,7 @@ export default function Home() {
     )
     /* setBooks([...books, newBook]) */
   }
-  
+
 
   return (
     <div className="font-sans grid items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
@@ -52,10 +56,10 @@ export default function Home() {
         <h2 className="py-5">Available Books</h2>
         <form id="bookForm" className=" border p-2 grid  grid-cols-1 gap-2" onSubmit={(a) => { onAddBook(a) }}>
           <div className="grid grid-cols-4 gap-2">
-            <input type="text" id="title" placeholder="Title" required className=" p-3 bg-gray-100" value={title} onChange={(e) => setTitle(e.target.value)}/>
+            <input type="text" id="title" placeholder="Title" required className=" p-3 bg-gray-100" value={title} onChange={(e) => setTitle(e.target.value)} />
             <input type="text" id="author" placeholder="Author" required className=" p-3 bg-gray-100" value={author} onChange={(e) => setAuthor(e.target.value)} />
             <input type="number" id="year" placeholder="Year" required className=" p-3 bg-gray-100" value={year} onChange={(e) => setYear(e.target.value)} />
-            <input type="text" id="genre" placeholder="Genre" required className=" p-3 bg-gray-100" value={genre} onChange={(e) => setGenre(e.target.value)}/>
+            <input type="text" id="genre" placeholder="Genre" required className=" p-3 bg-gray-100" value={genre} onChange={(e) => setGenre(e.target.value)} />
           </div>
 
           <div>
@@ -80,7 +84,7 @@ export default function Home() {
                     books.map((book, index) => {
                       return (
                         <tr key={index} className="border">
-                  
+
                           <td className="py-2 px-4 flex justify-between items-center gap-4">
                             <button className="p-2 bg-red-500 text-white font-medium rounded-md" onClick={() => onDelete(book.title)}>
                               Delete
