@@ -59,7 +59,7 @@ export default function Home() {
           </div>
 
           <div>
-            <button type="submit" className="p-2 bg-blue-500 text-white font-medium rounded-[0.5rem]">Update Book</button>
+            <button type="submit" className="p-2 bg-blue-500 text-white font-medium rounded-[0.5rem]">Update Book </button>
             <button type="submit" className="p-2 bg-blue-500 text-white font-medium rounded-[0.5rem] mx-4">Add book</button>
           </div>
         </form>
