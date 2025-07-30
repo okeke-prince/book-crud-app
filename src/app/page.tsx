@@ -1,103 +1,107 @@
-import Image from "next/image";
+"use client"
 
+import { useState } from "react";
+
+interface Book {
+  title: string;
+  author: string;
+  year: number;
+  genre: string;
+}
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+  const [books, setBooks] = useState<Book[]>([
+    { title: "The Time Thief", author: "James Hunter", year: 2021, genre: "Science Fiction" },
+    { title: "Silent Shadows", author: "Anna Williams", year: 2020, genre: "Thriller" },
+    { title: "Digital Eden", author: "Michael Chan", year: 2019, genre: "Cyberpunk" }
+  ]);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [year, setYear] = useState('');
+  const [genre, setGenre] = useState('');
+  const isShown = true
+
+  function onDelete( title: string){
+      setBooks((val) =>{
+        return val.filter(book => book.title !== title)
+      })
+      
+  }
+
+  function onAddBook(e: React.FormEvent){
+    e.preventDefault();
+    if (!title || !author || !year || !genre) return;
+    const newBook: Book = {
+      title: title,
+      author: author,
+      year: parseInt(year),
+      genre: genre
+    }
+    setBooks(prev =>
+      prev.some(b => b.title === title)
+        ? prev.map(b => b.title === title ? newBook : b) : [...prev, newBook]
+    )
+    /* setBooks([...books, newBook]) */
+  }
+  
+
+  return (
+    <div className="font-sans grid items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+      <div>
+        <h2 className="py-5">Available Books</h2>
+        <form id="bookForm" className=" border p-2 grid  grid-cols-1 gap-2" onSubmit={(a) => { onAddBook(a) }}>
+          <div className="grid grid-cols-4 gap-2">
+            <input type="text" id="title" placeholder="Title" required className=" p-3 bg-gray-100" value={title} onChange={(e) => setTitle(e.target.value)}/>
+            <input type="text" id="author" placeholder="Author" required className=" p-3 bg-gray-100" value={author} onChange={(e) => setAuthor(e.target.value)} />
+            <input type="number" id="year" placeholder="Year" required className=" p-3 bg-gray-100" value={year} onChange={(e) => setYear(e.target.value)} />
+            <input type="text" id="genre" placeholder="Genre" required className=" p-3 bg-gray-100" value={genre} onChange={(e) => setGenre(e.target.value)}/>
+          </div>
+
+          <div>
+            <button type="submit" className="p-2 bg-blue-500 text-white font-medium rounded-[0.5rem]">Update Book</button>
+            <button type="submit" className="p-2 bg-blue-500 text-white font-medium rounded-[0.5rem] mx-4">Add book</button>
+          </div>
+        </form>
+        <div className="mt-4">
+          {
+            isShown && (
+              <table className="table-auto w-full">
+                <thead>
+                  <tr>
+                    <th className="border px-4 py-2">Title</th>
+                    <th className="border px-4 py-2">Author</th>
+                    <th className="border px-4 py-2">Year</th>
+                    <th className="border px-4 py-2">Genre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    books.map((book, index) => {
+                      return (
+                        <tr key={index} className="border">
+                  
+                          <td className="py-2 px-4 flex justify-between items-center gap-4">
+                            <button className="p-2 bg-red-500 text-white font-medium rounded-md" onClick={() => onDelete(book.title)}>
+                              Delete
+                            </button>
+                            <span>{book.title}</span>
+                          </td>
+                          <td className="border px-4 py-2 text-center">{book.author}</td>
+                          <td className="border px-4 py-2 text-center">{book.year}</td>
+                          <td className="border px-4 py-2 text-center">{book.genre}</td>
+                        </tr>
+                      )
+                    })
+                  }
+
+                </tbody>
+              </table>
+            )
+          }
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
